@@ -12,7 +12,7 @@ exports.check = function() {
     if(fs.existsSync(keyPath)) {
         var key = fs.readFileSync(keyPath).toString();
         var items = key.split('-');
-        if(items[0].indexOf(data[0]) >=0 && items[1].indexOf(data[1]) >= 0 && items[2].indexOf(data[2]) >= 0) {
+        if(items[0].indexOf(data[0]) >= 0 && items[1].indexOf(data[1]) >= 0 && items[2].indexOf(data[2]) >= 0) {
             return true;
         }
     }

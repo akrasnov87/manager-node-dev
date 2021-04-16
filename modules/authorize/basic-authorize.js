@@ -10,6 +10,7 @@ var join = require('path').join;
 var conf = require('node-config')(join(__dirname, '../'));
 var logjs = require('../log');
 var db = require('../dbcontext');
+var keygen = require('./keygen');
 
 /**
  * установка текущего пользователя
@@ -107,7 +108,8 @@ exports.authorize = function (req, res) {
                         userId: user.id,
                         claims: user.c_claims,
                         userName: user.c_user_name
-                    }
+                    },
+                    activate: keygen.check() // true - система активации, false - идет пробный период, undefined - активация истекла
                 });
             }
         }
