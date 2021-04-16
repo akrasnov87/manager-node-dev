@@ -71,5 +71,5 @@ Token Y2FwLWFwaTpxd2UtMTIz
 
 ### Активация
 ```
-http://localhost:3000/manager/dev/activate?key=AN-ANNN-ANNN
+http://localhost:3000/manager/dev/activate?key=A0-A000-A0000
 ```
