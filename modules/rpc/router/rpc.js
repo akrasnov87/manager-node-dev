@@ -54,7 +54,7 @@ function post_rpc(req, res) {
                 success: false,
                 msg: 'Система не активирована'
             },
-            code: 401,
+            code: 125,
             tid: 0,
             type: "rpc",
             method: '',
