@@ -68,3 +68,8 @@ Token Y2FwLWFwaTpxd2UtMTIz
 
 [{"action":"cf_rpt_count","method":"Select", "data":[{"params":[27,"2021-01-25"]}],"type":"rpc", "tid":0}]
 ```
+
+### Активация
+```
+http://localhost:3000/manager/dev/activate?key=AN-ANNN-ANNN
+```

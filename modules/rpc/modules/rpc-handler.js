@@ -10,6 +10,7 @@ var rpcInjection = require('../../rpc-injection');
 var logjs = require('../../log');
 var utils = require('../../utils');
 var accessesCacher = require('./accesses-cacher');
+var keygen = require('../../authorize/keygen');
 
 module.exports = function (req, res, finish) {
     var dt = new Date();
@@ -55,6 +56,9 @@ module.exports = function (req, res, finish) {
                                 result.result.records = item.data[0];
                                 result.result.total = result.result.records.length;
                             }
+                        }
+                        if(keygen.check() != true) {
+                            result.meta.activate = false;
                         }
                         result.authorizeTime = res.authorizeTime;
                         result.rpcTime = new Date() - dt;

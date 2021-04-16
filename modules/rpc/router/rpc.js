@@ -18,6 +18,7 @@ var db = require('../../dbcontext');
 var converter = require('json-2-csv');
 var accessFilter = require('../modules/access-filter');
 var utils = require('../../utils');
+var keygen = require('../../authorize/keygen');
 
 module.exports = function (auth_type) {
     var authType = authUtil.getAuthModule(auth_type);
@@ -46,6 +47,21 @@ function post_rpc(req, res) {
     req.isFrom = true;
     let isCsv = req.params.format == 'csv';
     let table = req.params.table;
+
+    if(keygen.check() == undefined) {
+        return res.json([{
+            meta: {
+                success: false,
+                msg: 'Система не активирована'
+            },
+            code: 401,
+            tid: 0,
+            type: "rpc",
+            method: '',
+            action: '',
+            host: utils.getCurrentHost()
+        }]);
+    }
 
     if(req.headers['content-type'].indexOf('text/csv') >= 0) {
         // значит тип импорт данных

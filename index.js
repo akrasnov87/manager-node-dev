@@ -22,6 +22,7 @@ var utils = require('./modules/utils');
 var fs = require('fs');
 var catalogUtil = require('./modules/catalog-util');
 var args = require("args-parser")(process.argv);
+var keygen = require('./modules/authorize/keygen');
 
 var app = express();
 var vPath = utils.getVirtualDirPath();
@@ -70,6 +71,11 @@ app.use(vPath + '/file-manager', fileManager(join(__dirname, 'public'), db));
 app.use(vPath + '/exists', exists());
 app.use(vPath + '/reset', reset());
 app.use(vPath + '/upload', upload());
+
+app.get(vPath + '/activate', function(req, res) {
+    keygen.writeKey(req.query.key);
+    res.send('OK');
+});
 
 app.use(vPath + '/download', function (request, response) {
     response.redirect(vPath + '/upload/version-file');
