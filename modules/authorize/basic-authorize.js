@@ -107,7 +107,8 @@ exports.authorize = function (req, res) {
                     user: {
                         userId: user.id,
                         claims: user.c_claims,
-                        userName: user.c_user_name
+                        userName: user.c_user_name,
+                        disabled: userb_disabled
                     },
                     activate: keygen.check() // true - система активации, false - идет пробный период, undefined - активация истекла
                 });
