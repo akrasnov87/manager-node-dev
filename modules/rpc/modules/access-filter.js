@@ -38,6 +38,7 @@ exports.filter = function (item, user_id, schema, callback) {
                     item.data[0].sn_delete = true;
                 }
             }
+
             // проверка можно ли делать запрос
             if (validAction(item.action, item.method, convert)) {
                 var filter_delete_items = filterDeleteItems(item.action, item.method, convert, schema);
@@ -179,7 +180,7 @@ function validAction(action, method, convert) {
  * @returns {boolean}
  */
 function accessDelete(action, convert, schema) {
-    return convert.getIsDeletable(action, schema) && convert.delete[action] == false;
+    return convert.getIsDeletable(action, schema) && (convert.delete[action] == false || convert.delete[null] == false);
 }
 
 /**
@@ -191,5 +192,5 @@ function accessDelete(action, convert, schema) {
  * @returns {boolean}
  */
 function filterDeleteItems(action, method, convert, schema) {
-    return method == 'Query' && convert.getIsDeletable(action, schema) && convert.delete[action] == false;
+    return method == 'Query' && convert.getIsDeletable(action, schema) && (convert.delete[action] == false || convert.delete[null] == false);
 }

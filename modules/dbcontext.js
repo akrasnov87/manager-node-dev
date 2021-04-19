@@ -734,11 +734,7 @@ exports.pd_userinroles = function (session) {
  *      c_login:text - Логин
  *      c_password:text - Пароль
  *      c_phone:text - Телефон
- *      c_version:text - Версия мобильного приложения
- *      fn_file:uuid - Иконка
- *      f_parent:integer (core.pd_users.id) - Родитель
  *      id:integer - Идентификатор
- *      n_version:bigint - Версия мобильного приложения - Число
  *      s_hash:text - Hash
  *      sn_delete:boolean - Удален
  *      s_salt:text - Salt
@@ -857,11 +853,7 @@ exports.pf_update_user_roles = function (session) {
  *      c_first_name:text - c_first_name
  *      c_login:text - c_login
  *      c_phone:text - c_phone
- *      c_version:text - c_version
- *      fn_file:uuid - fn_file
- *      f_parent:integer - f_parent
  *      id:integer - id
- *      n_version:bigint - n_version
  * // примеры выборки
  * [{ action: "pv_users", method: "Query", data: [{ }], type: "rpc", tid: 0 }]
  * // примеры получения количества записей
@@ -1206,10 +1198,7 @@ exports.sv_objects = function (session) {
  *      c_login:text - c_login
  *      c_password:text - c_password
  *      c_user_name:text - c_user_name
- *      c_version:text - c_version
- *      f_parent:integer - f_parent
  *      id:integer - id
- *      n_version:bigint - n_version
  *      s_hash:text - s_hash
  *      s_salt:text - s_salt
  * // примеры выборки
