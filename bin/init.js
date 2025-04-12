@@ -4,17 +4,16 @@ var join = require('path').join;
 
 var reader = require('mobnius-schema-reader');
 var conf = require('node-config')(join(__dirname, '../'));
-var args = require("args-parser")(process.argv);
 require('./cleanup');
 var moment = require('moment');
 
 module.exports = function (callback) {
     reader({
-        connectionString: args.connection_string || conf.get('connectionString'),
+        connectionString: process.env.connection_string || conf.get('connectionString'),
         autoRemove: true,
         schemaList: ["'core'", "'dbo'", "'rpt'"],
         schemaReference: join(__dirname, '../', 'schema.reference'),
-        output: join(__dirname, '../', 'schema', args.port.toString())
+        output: join(__dirname, '../', 'schema', process.env.port.toString())
     }, function (schemas) {
         Date.prototype.toJSON = function () { return moment(this).format('YYYY-MM-DDTHH:mm:ss.SSSZZ'); }
 

@@ -8,7 +8,6 @@ var provider = require('mobnius-pg-dbcontext');
 var filter = require('./rpc/modules/access-filter');
 var utils = require('./utils');
 provider.initPool(utils.getConnectionString(), global.schemas);
-var args = require("args-parser")(process.argv);
 
 /**
  * Специальный компонент для создания ручных запросов
@@ -236,44 +235,6 @@ exports.cd_sys_log = function (session) {
 }
 
 /**
- * Триггер. Процедура логирования действия пользователя
- * @example
- * Тип: FUNCTION
- * Схема: core 
- * // примеры выборки
- * [{ action: "cft_log_action", method: "Query", data: [{ }], type: "rpc", tid: 0 }]
- */
-exports.cft_log_action = function (session) {
-    return {
-        Query: function (query_param, callback) {
-            provider.call('core', 'cft_log_action', query_param.params, function() {
-                onQueryListener('cft_log_action', 'QUERY', null, query_param, session);
-                callback(arguments[0]);
-            });
-        }
-    }
-}
-
-/**
- * Триггер. Обновление справочной версии
- * @example
- * Тип: FUNCTION
- * Схема: core 
- * // примеры выборки
- * [{ action: "cft_table_state_change_version", method: "Query", data: [{ }], type: "rpc", tid: 0 }]
- */
-exports.cft_table_state_change_version = function (session) {
-    return {
-        Query: function (query_param, callback) {
-            provider.call('core', 'cft_table_state_change_version', query_param.params, function() {
-                onQueryListener('cft_table_state_change_version', 'QUERY', null, query_param, session);
-                callback(arguments[0]);
-            });
-        }
-    }
-}
-
-/**
  * История изменнения документа
  * @example
  * Тип: FUNCTION
@@ -348,6 +309,44 @@ exports.cf_mui_sd_table_change = function (session) {
         Select: function (query_param, callback) {
             provider.select('core', 'cf_mui_sd_table_change()', query_param, filter.security(session), function() {
                 onQueryListener('cf_mui_sd_table_change', 'SELECT', null, query_param, session);
+                callback(arguments[0]);
+            });
+        }
+    }
+}
+
+/**
+ * Триггер. Процедура логирования действия пользователя
+ * @example
+ * Тип: FUNCTION
+ * Схема: core 
+ * // примеры выборки
+ * [{ action: "cft_log_action", method: "Query", data: [{ }], type: "rpc", tid: 0 }]
+ */
+exports.cft_log_action = function (session) {
+    return {
+        Query: function (query_param, callback) {
+            provider.call('core', 'cft_log_action', query_param.params, function() {
+                onQueryListener('cft_log_action', 'QUERY', null, query_param, session);
+                callback(arguments[0]);
+            });
+        }
+    }
+}
+
+/**
+ * Триггер. Обновление справочной версии
+ * @example
+ * Тип: FUNCTION
+ * Схема: core 
+ * // примеры выборки
+ * [{ action: "cft_table_state_change_version", method: "Query", data: [{ }], type: "rpc", tid: 0 }]
+ */
+exports.cft_table_state_change_version = function (session) {
+    return {
+        Query: function (query_param, callback) {
+            provider.call('core', 'cft_table_state_change_version', query_param.params, function() {
+                onQueryListener('cft_table_state_change_version', 'QUERY', null, query_param, session);
                 callback(arguments[0]);
             });
         }
@@ -442,14 +441,19 @@ exports.cs_setting_types = function (session) {
  *      c_import_warning:text - Замечания после импорта
  *      c_intent:text - Цель использования земельного участка
  *      c_notice:text - Примечание
+ *      c_phone:text - Номер телефона
+ *      c_tag:text - c_tag
  *      c_time:text - Время подачи заявления
  *      d_birthday:date - Дата рождения
  *      d_date:timestamp with time zone - Дата подачи заявления
  *      d_take_off_message:date - Сообщение заявителю о снятии с учета
  *      d_take_off_solution:date - Решение о снятии с учета
+ *      dx_created:timestamp with time zone - dx_created
+ *      f_type:integer - Тип записи: 0 - обычная, 1 - СВО
  *      f_user:integer (core.pd_users.id) - Пользователь
  *      id:uuid - Идентификатор
  *      jb_child:jsonb - Вложения
+ *      jb_print:jsonb - jb_print
  *      n_number:integer - Номер
  *      n_year:smallint - Возраст на момент постановки
  *      sn_delete:boolean - sn_delete
@@ -505,6 +509,93 @@ exports.dd_documents = function (session) {
         Count: function (query_param, callback) {
             onQueryListener('dd_documents', 'COUNT', 'id', query_param, session);
             provider.count('core', 'dd_documents', query_param, callback);
+        }
+    }
+}
+
+/**
+ * 
+ * @example
+ * Тип: BASE TABLE
+ * Первичный ключ: id
+ * Схема: core
+ * Поля:
+ *      c_accept:text - Дата и номер принятия решения
+ *      c_account:text - Постановление о постановке на учет
+ *      c_address:text - Адрес, телефон
+ *      c_document:text - Реквизиты документа, удостоверяющего личность
+ *      c_earth:text - Кадастровй номер земельного участка
+ *      c_fio:text - Фамилия, Имя, Отчество заявителя
+ *      c_import_doc:text - Документ из которого импортировались данные
+ *      c_import_warning:text - Замечания после импорта
+ *      c_intent:text - Цель использования земельного участка
+ *      c_notice:text - Примечание
+ *      c_phone:text - Номер телефона
+ *      c_time:text - Время подачи заявления
+ *      d_birthday:date - Дата рождения
+ *      d_date:timestamp with time zone - Дата подачи заявления
+ *      d_take_off_message:date - Сообщение заявителю о снятии с учета
+ *      d_take_off_solution:date - Решение о снятии с учета
+ *      dx_created:timestamp with time zone - dx_created
+ *      f_user:integer (core.pd_users.id) - Пользователь
+ *      id:uuid - Идентификатор
+ *      jb_child:jsonb - Вложения
+ *      jb_print:jsonb - jb_print
+ *      n_number:integer - Номер
+ *      n_year:smallint - Возраст на момент постановки
+ *      sn_delete:boolean - sn_delete
+ * // примеры выборки
+ * [{ action: "dd_tmp_documents", method: "Query", data: [{ }], type: "rpc", tid: 0 }]
+ * // примеры выборки через функцию
+ * [{ action: "cf_mui_dd_tmp_documents", method: "Select", data: [{ }], type: "rpc", tid: 0 }]
+ * // примеры добавления
+ * [{ action: "dd_tmp_documents", method: "Add", data: [{ }], type: "rpc", tid: 0 }]
+ * // примеры обновления
+ * [{ action: "dd_tmp_documents", method: "Update", data: [{id:any ...}|[{id:any ...}], type: "rpc", tid: 0 }]
+ * // примеры создания или обновления
+ * [{ action: "dd_tmp_documents", method: "AddOrUpdate", data: [{id:any ...}], type: "rpc", tid: 0 }]
+ * // примеры удаления
+ * [{ action: "dd_tmp_documents", method: "Delete", data: [{id:any ...}|[{id:any ...}], type: "rpc", tid: 0 }]
+ * // примеры получения количества записей
+ * [{ action: "dd_tmp_documents", method: "Count", data: [{ }], type: "rpc", tid: 0 }]
+ */
+exports.dd_tmp_documents = function (session) {
+    return {
+        Query: function (query_param, callback) {
+            onQueryListener('dd_tmp_documents', 'QUERY', 'id', query_param, session);
+            provider.select('core', 'dd_tmp_documents', query_param, filter.security(session), callback);
+        },
+        Select: function (query_param, callback) {
+            onQueryListener('dd_tmp_documents', 'SELECT', 'id', query_param, session);
+            provider.select('core', 'cf_mui_dd_tmp_documents()', query_param, filter.security(session), callback);
+        },
+        Add: function (data, callback) {
+            provider.insert('core', 'dd_tmp_documents', data, function() {
+                onQueryListener('dd_tmp_documents', 'INSERT', 'id', data, session);
+                callback(arguments[0]);
+            });
+        },
+        AddOrUpdate: function (data, callback) {
+            provider.insertOrUpdate('core', 'dd_tmp_documents', 'id', data, function() {
+                onQueryListener('dd_tmp_documents', 'INSERT_OR_UPDATE', 'id', data, session);
+                callback(arguments[0]);
+            });
+        },
+        Update: function (data, callback) {
+            provider.update('core', 'dd_tmp_documents', 'id', data, function() {
+                onQueryListener('dd_tmp_documents', 'UPDATE', 'id', data, session);
+                callback(arguments[0]);
+            });
+        },
+        Delete: function (data, callback) {
+            provider.delete('core', 'dd_tmp_documents', 'id', data, function() {
+                onQueryListener('dd_tmp_documents', 'DELETE', 'id', data, session);
+                callback(arguments[0]);
+            });
+        },
+        Count: function (query_param, callback) {
+            onQueryListener('dd_tmp_documents', 'COUNT', 'id', query_param, session);
+            provider.count('core', 'dd_tmp_documents', query_param, callback);
         }
     }
 }
@@ -734,10 +825,11 @@ exports.pd_userinroles = function (session) {
  *      c_login:text - Логин
  *      c_password:text - Пароль
  *      c_phone:text - Телефон
+ *      f_category:integer - Категория поьзователя: 0 - обычные граждани, 1 - СВО
  *      id:integer - Идентификатор
  *      s_hash:text - Hash
- *      sn_delete:boolean - Удален
  *      s_salt:text - Salt
+ *      sn_delete:boolean - Удален
  * // примеры выборки
  * [{ action: "pd_users", method: "Query", data: [{ }], type: "rpc", tid: 0 }]
  * // примеры выборки через функцию
@@ -1024,25 +1116,6 @@ exports.sf_accesses = function (session) {
 }
 
 /**
- * Генерация версии БД
- * @example
- * Тип: FUNCTION
- * Схема: core 
- * // примеры выборки
- * [{ action: "sf_build_version", method: "Query", data: [{ }], type: "rpc", tid: 0 }]
- */
-exports.sf_build_version = function (session) {
-    return {
-        Query: function (query_param, callback) {
-            provider.call('core', 'sf_build_version', query_param.params, function() {
-                onQueryListener('sf_build_version', 'QUERY', null, query_param, session);
-                callback(arguments[0]);
-            });
-        }
-    }
-}
-
-/**
  * Создание пользователя с определенными ролями
  * @example
  * Тип: FUNCTION
@@ -1165,7 +1238,7 @@ exports.sf_update_version = function (session) {
  *      primary_key:character varying - primary_key
  *      table_comment:character varying - table_comment
  *      table_name:character varying - table_name
- *      table_schema:character varying - table_schema
+ *      table_schema:name - table_schema
  *      table_title:character varying - table_title
  *      table_type:character varying - table_type
  * // примеры выборки
@@ -1245,7 +1318,7 @@ exports.getUser = function(login, callback) {
 }
 
 function onQueryListener(action, method, idName, data, session) {
-    if(args.debug) {
+    if(process.env.debug) {
         var item = (data && typeof data.length == 'number') ? data[0] : data;
         provider.insert('core', 'cd_action_log_user', { 
             integer_id: (item && typeof item[idName] == 'number') ? item[idName] : null,  

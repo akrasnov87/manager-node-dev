@@ -1,6 +1,5 @@
 var socketUtils = require('./socket/utils');
 var logjs = require('./log');
-var args = require('args-parser')(process.argv);
 var conf = require('node-config')(__dirname, '../');
 
 /**
@@ -197,7 +196,7 @@ exports.createMeta = function (to, from, groups) {
 exports.getCurrentHost = getCurrentHost;
 
 function getCurrentHost() {
-    return 'localhost:' + args.port;
+    return 'localhost:' + process.env.port;
 }
 
 /**
@@ -205,7 +204,7 @@ function getCurrentHost() {
  * @returns {string}
  */
 exports.getVirtualDirPath = function () {
-    return args.virtual_dir_path || conf.get('virtual_dir_path');
+    return process.env.virtual_dir_path || conf.get('virtual_dir_path');
 }
 
 /**
@@ -213,5 +212,5 @@ exports.getVirtualDirPath = function () {
  * @returns {string}
  */
 exports.getConnectionString = function () {
-    return args.connection_string || conf.get('connectionString');
+    return process.env.connection_string || conf.get('connectionString');
 }

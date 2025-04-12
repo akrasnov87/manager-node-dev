@@ -7,13 +7,11 @@
 var debug = require('debug')('node-service');
 var http = require('http');
 
-var join = require('path').join;
-var conf = require('node-config')(join(__dirname, '../'));
 var init = require('./init');
 var logjs = require('../modules/log');
-var args = require("args-parser")(process.argv);
+
 var server = null;
-var port = normalizePort(args.port);
+var port = normalizePort(process.env.port);
 var utils = require('../modules/utils');
 
 init(function() {  // инициализация схемы БД

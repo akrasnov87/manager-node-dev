@@ -1,12 +1,11 @@
 var log4js = require('./logToFile');
-var args = require('args-parser')(process.argv);
 
 /**
  * Лог
  * @param {string} message текст
  */
 exports.log = function (message) {
-    if (args.debug) {
+    if (process.env.debug) {
         log4js.getLogger().info(message);
     }
     console.log(message);
@@ -17,7 +16,7 @@ exports.log = function (message) {
  * @param {string} message текст
  */
 exports.debug = function (message) {
-    if (args.debug) {
+    if (process.env.debug) {
         log4js.getLogger().debug(message);
     }
     console.debug(message);

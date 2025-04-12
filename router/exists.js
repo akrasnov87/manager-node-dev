@@ -40,7 +40,8 @@ function exists(req, res) {
         res.json({
             version: pkg.version,
             dbVersion: dbVersion,
-            ip: req.ip
+            ip: req.ip,
+            docker: process.env.container_version
         });
     });
 }

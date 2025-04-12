@@ -21,7 +21,6 @@ var logjs = require('./modules/log');
 var utils = require('./modules/utils');
 var fs = require('fs');
 var catalogUtil = require('./modules/catalog-util');
-var args = require("args-parser")(process.argv);
 var keygen = require('./modules/authorize/keygen');
 
 var app = express();
@@ -102,11 +101,11 @@ app.use(function (err, req, res, next) {
 });
 
 // удаление старых каталогов
-if (!args.not_remove_files && !fs.existsSync(join(__dirname, 'files'))) {
+if (!process.env.not_remove_files && !fs.existsSync(join(__dirname, 'files'))) {
     fs.mkdirSync(join(__dirname, 'files'));
 }
 
-if (!args.not_remove_files) {
+if (!process.env.not_remove_files) {
     var nTimeLine = 24 * 60 * 60 * 1000;
     var nDay = 1;
     catalogUtil.removeLastDirs(join(__dirname, 'files'), nDay);

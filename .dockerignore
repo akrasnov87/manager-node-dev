@@ -1,0 +1,11 @@
+*
+!bin
+!configs
+!modules
+!node_modules
+!public
+!router
+!views
+!index.js
+!package.json
+!schema.reference

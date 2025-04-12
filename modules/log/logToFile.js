@@ -1,6 +1,5 @@
 var log4js = require('log4js');
 var join = require('path').join;
-var args = require('args-parser')(process.argv);
 
 /**
  * объект для логирования данных
@@ -8,12 +7,12 @@ var args = require('args-parser')(process.argv);
  */
 var logger = null;
 
-if (!logger && args.port) {
+if (!logger && process.env.port) {
     log4js.configure({
         appenders: {
             log: {
                 type: 'file',
-                filename: join(__dirname, '../', '../', 'logs/log-' + args.port + '.log'),
+                filename: join(__dirname, '../', '../', 'logs/log-' + process.env.port + '.log'),
                 maxLogSize: 1024 * 1024,
                 backups: 5,
                 compress: true
@@ -22,7 +21,7 @@ if (!logger && args.port) {
         categories: {
             default: {
                 appenders: ['log'],
-                level: args.debug ? 'DEBUG' : 'ERROR'
+                level: process.env.debug ? 'DEBUG' : 'ERROR'
             }
         }
     });

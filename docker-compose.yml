@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  backend:
+    container_name: rest-${app_env}
+    image: akrasnov87/manager-arm:${container_version}
+    restart: always
+    ports:
+      - ${extend_port}:3000
+    environment:
+      port: 3000
+      virtual_dir_path: ${virtual_dir_path}
+      connection_string: ${connection_string}
+      debug: ${debug}
+      container_version: ${container_version}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ${logs_path}:/opt/app/logs
+
+  frontend:
+    container_name: manager-arm-${app_env}
+    image: kirilla/manager-arm-${app_env}:${arm_version}
+    restart: always
+    ports:
+      - ${arm_port}:80
